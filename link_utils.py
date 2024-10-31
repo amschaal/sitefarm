@@ -79,7 +79,7 @@ def check_url(url):
         else:
             link['valid'] = False
     except Exception as e:
-        return False, f"Request failed: {e}", None
+        return False
     finally:
         conn.close()
     
