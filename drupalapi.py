@@ -4,9 +4,7 @@ import base64
 
 site = json.load(open('.siteinfo.json'))
 
-def create_drupal_node(drupal_url, username, password, node_data):
-
-    # Prepare JSON data
+def get_connection(drupal_url, username, password):
     headers = {
         'Content-Type': 'application/vnd.api+json',
         'Accept': 'Accept: application/vnd.api+json',
@@ -15,10 +13,15 @@ def create_drupal_node(drupal_url, username, password, node_data):
 
     # Create a connection
     conn = http.client.HTTPSConnection(drupal_url)
+    return headers, conn
+
+def create_drupal_node(drupal_url, username, password, path, node_data):
+
+    headers, conn = get_connection(drupal_url, username, password)
 
     try:
         # Send a POST request
-        conn.request("POST", 'https://'+drupal_url + "/jsonapi/node/faq", json.dumps(node_data), headers)
+        conn.request("POST", 'https://'+drupal_url + path, json.dumps(node_data), headers)
         
         # Get the response
         response = conn.getresponse()
@@ -30,7 +33,30 @@ def create_drupal_node(drupal_url, username, password, node_data):
     finally:
         conn.close()
 
+    return response
+
+def update_drupal_node(drupal_url, username, password, path, node_data):
+    
+    headers, conn = get_connection(drupal_url, username, password)
+
+    try:
+        # Send a POST request
+        conn.request("PATCH", 'https://'+drupal_url + path, json.dumps(node_data), headers)
+        
+        # Get the response
+        response = conn.getresponse()
+        data = response.read()
+
+        # Print the response
+        print(f"Status: {response.status}, Reason: {response.reason}")
+        print("Response:", data.decode())
+    finally:
+        conn.close()
+
+    return response
+
 def main():
+    # Just for testing
     drupal_url = site['site']
     username = site['username']
     password = site['password']
