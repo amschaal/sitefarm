@@ -15,7 +15,7 @@ def get_connection(drupal_url, username, password):
     conn = http.client.HTTPSConnection(drupal_url)
     return headers, conn
 
-def create_drupal_node(drupal_url, username, password, path, node_data):
+def create_drupal_node(drupal_url, username, password, path, node_data, verbose=False):
 
     headers, conn = get_connection(drupal_url, username, password)
 
@@ -27,15 +27,16 @@ def create_drupal_node(drupal_url, username, password, path, node_data):
         response = conn.getresponse()
         data = response.read()
 
-        # Print the response
-        print(f"Status: {response.status}, Reason: {response.reason}")
-        print("Response:", data.decode())
+        if verbose:
+            # Print the response
+            print(f"Status: {response.status}, Reason: {response.reason}")
+            print("Response:", data.decode())
     finally:
         conn.close()
 
     return response
 
-def update_drupal_node(drupal_url, username, password, path, node_data):
+def update_drupal_node(drupal_url, username, password, path, node_data, verbose=False):
     
     headers, conn = get_connection(drupal_url, username, password)
 
@@ -47,9 +48,10 @@ def update_drupal_node(drupal_url, username, password, path, node_data):
         response = conn.getresponse()
         data = response.read()
 
-        # Print the response
-        print(f"Status: {response.status}, Reason: {response.reason}")
-        print("Response:", data.decode())
+        if verbose:
+            # Print the response
+            print(f"Status: {response.status}, Reason: {response.reason}")
+            print("Response:", data.decode())
     finally:
         conn.close()
 
